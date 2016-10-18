@@ -165,7 +165,7 @@ int main(int argc, const char * argv[]) {
         {
             token += inputString[i];
             i++;
-            if(inputString[i] == '=' || inputString[i] == '>')//如果下一个字符符合要求，加入
+            if( (inputString[i-1] == ':' || inputString[i-1] == '<' || inputString[i-1] == '>') && (inputString[i] == '=' || inputString[i] == '>'))//如果下一个字符符合要求，加入
             {
                 token += inputString[i];
             }
