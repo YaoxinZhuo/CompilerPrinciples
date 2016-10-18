@@ -139,7 +139,7 @@ int main(int argc, const char * argv[]) {
                 i++;
             }
             int keywordNumber = isKeyword(token);
-            if(keywordNumber == -1)
+            if(keywordNumber == -1)//返回－1表示非关键字
             {
                 keywordNumber = 10;
                 cout<<"("<<keywordNumber<<","<<token<<")";
