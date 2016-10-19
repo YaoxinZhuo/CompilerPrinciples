@@ -10,12 +10,14 @@
 #include <cstdio>
 #include <string>
 #include <algorithm>
+#include <set>
 #include <map>//引入map，快速查找符号和关键字，也可以对应他们的序号，方便打印
 
 using namespace std;
 
 map<string,int> Symbols;//string符号，int种别码
 map<string,int> Keywords;//string关键词，int种别码
+set<char> LegalSymbols;
 
 bool isDigit(char ch)
 {
@@ -65,6 +67,18 @@ int isKeyword(string str)
     }
 }
 
+bool isLegalSymbol(char ch)
+{
+    if(isDigit(ch) || isLetter(ch) || LegalSymbols.count(ch) == 1 || ch == ' ')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 string handleSpace(string s)
 {
     string result;
@@ -103,6 +117,19 @@ void preProcess()
     Symbols.insert(pair<string, int>(")",28));
     Symbols.insert(pair<string, int>("#",0));
     
+    LegalSymbols.insert('+');
+    LegalSymbols.insert('-');
+    LegalSymbols.insert('*');
+    LegalSymbols.insert('/');
+    LegalSymbols.insert(':');
+    LegalSymbols.insert('=');
+    LegalSymbols.insert('<');
+    LegalSymbols.insert('>');
+    LegalSymbols.insert(';');
+    LegalSymbols.insert('(');
+    LegalSymbols.insert(')');
+    LegalSymbols.insert('#');
+    
     Keywords.insert(pair<string,int>("begin",1));
     Keywords.insert(pair<string,int>("if",2));
     Keywords.insert(pair<string,int>("then",3));
@@ -117,12 +144,25 @@ int main(int argc, const char * argv[]) {
     
     string inputString;
     string token;
+    bool legalString = true;
     
     getline(cin,inputString);
 
     //inputString = handleSpace(inputString); 可以把空格运用到分割中，真的编译器不是这么简单的
     //cout<<inputString<<endl;示范性编译输出
     
+    for (int i = 0; i < inputString.length(); i ++)
+    {
+        if(isLegalSymbol(inputString[i]) == false)
+        {
+            cout<<"出现非法字符, 中止程序!"<<endl;
+            legalString = false;
+            break;
+        }
+    }
+    
+    if(legalString)//合法字符串才能进行词法分析
+    {
     for(int i = 0;i < inputString.length();i ++)
     {
         if(inputString[i] == ' ')
@@ -131,9 +171,10 @@ int main(int argc, const char * argv[]) {
             continue;
         }
         
+        
         if(isLetter(inputString[i]))//标识别符，看看是不是keywords或者ID
         {
-            while (isLetter(inputString[i]) || isDigit(inputString[i]) )
+            while ((isLetter(inputString[i]) || isDigit(inputString[i]) ) )
             {
                 token += inputString[i];
                 i++;
@@ -161,22 +202,23 @@ int main(int argc, const char * argv[]) {
             token = "";//clear
         }
         //余下字符
-        if(!isDigit(inputString[i]) && !isLetter(inputString[i]) && inputString[i] != ' ')
+        if( isLegalSymbol(inputString[i]) && !isDigit(inputString[i]) && !isLetter(inputString[i]) && inputString[i] != ' ')
         {
             token += inputString[i];
             i++;
-            if( (inputString[i-1] == ':' || inputString[i-1] == '<' || inputString[i-1] == '>') && (inputString[i] == '=' || inputString[i] == '>'))//如果下一个字符符合要求，加入
+            if((inputString[i-1] == ':' || inputString[i-1] == '<' || inputString[i-1] == '>') && (inputString[i] == '=' || inputString[i] == '>'))//如果下一个字符符合要求，加入
             {
                 token += inputString[i];
             }
             else//否则i的下一个得放到下一轮判定,i--还原
             {
-                i--;
+                    i--;
             }
             int otherwordsNumber = Symbols[token];
             cout<<"("<<otherwordsNumber<<","<<token<<")";
             token = "";//clear
         }
+    }
     }
     
     
