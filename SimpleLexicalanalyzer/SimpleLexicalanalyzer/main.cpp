@@ -189,6 +189,7 @@ int main(int argc, const char * argv[]) {
             {
                 cout<<"("<<keywordNumber<<","<<token<<")";
             }
+            i--;
             token = "";//clear
         }
         if(isDigit(inputString[i]))//判断是不是数字
@@ -198,8 +199,18 @@ int main(int argc, const char * argv[]) {
                 token += inputString[i];
                 i++;
             }
-            cout<<"("<<11<<","<<token<<")";
-            token = "";//clear
+            if(isLetter(inputString[i]))
+            {
+                cout<<"未识别出来,中止"<<endl;
+                token = "";
+                break;
+            }
+            else
+            {
+                i--;
+                cout<<"("<<11<<","<<token<<")";
+                token = "";//clear
+            }
         }
         //余下字符
         if( isLegalSymbol(inputString[i]) && !isDigit(inputString[i]) && !isLetter(inputString[i]) && inputString[i] != ' ')
