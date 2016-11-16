@@ -388,7 +388,7 @@ void lrparse()
             }
             default:
             {
-                cout<<"该结束了"<<endl;
+                //cout<<"该结束了"<<endl;
                 endFlag = true;
                 break;
             }
