@@ -22,8 +22,7 @@ set<char> LegalSymbols;
 string inputString;
 string token;
 char ch;
-int p;
-int syn;
+int syn;//syn和keyword等价，但是keyword是我上次实验的东西，搬过来用还是分开两个变量了。
 int n;
 int i;
 bool allFlag = true;
@@ -263,7 +262,7 @@ void factor()
         allFlag = false;
         cout<<"\n//语法分析error，factor,非左括号（"<<endl;
     }
-    cout<<"\t 退出factor"<<endl;
+    cout<<"\n\t 退出factor"<<endl;
 }
 
 void term()
@@ -421,7 +420,6 @@ int main()
     }
     if(legalString)
     {
-        //	p = 0;//起始Position从0开始
         i = 0;
         syn = -1;
         //inputString = handleSpace(inputString); 可以把空格运用到分割中，真的编译器不是这么简单的
@@ -430,6 +428,11 @@ int main()
         while(i!=inputString.length())
         {
             scanner();
+            if(syn == -999)
+            {
+                cout<<"空输入"<<endl;
+                return 0;
+            }
         }
         cout<<endl<<"现在开始是正式的语法分析器部分:\n"<<endl; 
         i = 0; 
@@ -442,7 +445,7 @@ int main()
         else
         { 
             allFlag = false;
-            cout<<"//缺少begin,没有begin也要继续分析"<<endl;
+            cout<<"\n//缺少begin,没有begin也要继续分析"<<endl;
             //即使没有begin，分析也要继续？
             i=0;//没有begin也要重来 
             lrparse();
@@ -457,7 +460,7 @@ int main()
             else if(syn == 6)
             {
                 allFlag = false;
-                cout<<"两个end"<<endl;
+                cout<<"\n两个end"<<endl;
             } 
             if(allFlag==false)
             {
